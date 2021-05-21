@@ -5,8 +5,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">英単語記憶アプリ</header>
-
-      <div> asassasaas </div>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 class Hello {
-  greet() {
-    console.log('Hello!');
+  greetings() {
+    console.log('hello youtube');
   }
 }
 
 const hello = new Hello();
-hello.greet();
+hello.greeting();
