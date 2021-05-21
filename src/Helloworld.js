@@ -5,4 +5,4 @@ class Hello {
 }
 
 const hello = new Hello();
-hello.greeting();
+hello.greetifdng();
