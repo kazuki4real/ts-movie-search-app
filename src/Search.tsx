@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import { ModifierFlags } from 'typescript'
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,16 +18,34 @@ const MainContent = styled.div`
 `
 
 const SearchField = styled(TextField)`
-  width: 80%;
+  width: 100%;
   margin-top: 25px;
 `
 
 const LinkButton = styled(Button)`
-  width: 80%;
+  width: 50%;
   margin: 25px 0;
 `
 
+const SearchBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const SearchBtn = styled(Button)`
+  margin-top: 25px;
+  width: 100%;
+`
+
+const Paper = styled.div`
+  padding: 10px 15px;
+`
+
 type Array = {
+  id: string
   Poster: string
   Title: string
   Type: string
@@ -86,33 +105,37 @@ const Search = () => {
 
   return (
     <Wrapper>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <SearchField
-          id="outlined-basic"
-          label="Search series..."
-          variant="outlined"
-          value={queryTitle}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setqueryTitle(e.target.value)}
-        />
-        <SearchField
-          id="outlined-basic"
-          label="Search by Year..."
-          variant="outlined"
-          value={year}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setYear(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <SearchBox>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <SearchField
+            id="outlined-basic"
+            label="Search series..."
+            variant="outlined"
+            value={queryTitle}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setqueryTitle(e.target.value)}
+          />
+          <SearchField
+            id="outlined-basic"
+            label="Search by Year..."
+            variant="outlined"
+            value={year}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setYear(e.target.value)}
+          />
+          <SearchBtn variant="contained" type="submit">
+            Search
+          </SearchBtn>
+        </form>
+      </SearchBox>
       {queryTitle !== '' ? (
-        movies.map((movie: any, index) => (
+        movies.map((movie: Array) => (
           <ul>
             {movie.Poster === 'N/A' ? null : (
-              <div key={movie.id}>
-                <li key={index}>{movie.Title}</li>
+              <Paper key={movie.id}>
+                <li key={movie.id}>{movie.Title}</li>
                 <a href={`https://www.imdb.com/title/${movie.imdbID}/`} target="_blank">
-                  <img src={movie.Poster} alt="MovieImage" />
+                  <img src={movie.Poster} alt="MovieImage" width="300" height="445" />
                 </a>
-              </div>
+              </Paper>
             )}
           </ul>
         ))
@@ -120,12 +143,12 @@ const Search = () => {
         <div>
           <h1>Here are the recommendations for you!</h1>
           <MainContent>
-            {examples.map((example: any, index) => (
-              <div key={index}>
+            {examples.map((example: Array) => (
+              <Paper key={example.id}>
                 <a href={`https://www.imdb.com/title/${example.imdbID}/`} target="_blank">
-                  <img src={example.Poster} alt="MovieImage" />
+                  <img src={example.Poster} alt="MovieImage" width="300" height="445" />
                 </a>
-              </div>
+              </Paper>
             ))}
           </MainContent>
         </div>
