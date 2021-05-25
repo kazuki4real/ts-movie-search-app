@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import Home from './Home'
 import Search from './Search'
+import Movie from './Movie'
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -25,7 +26,10 @@ const App: React.FC = () => {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/search" component={Search} />
+          <Route exact path="/search/" component={Search} />
+          <Route path="/search/:imdbID">
+            <Movie />
+          </Route>
           <Redirect to="/" />
         </Switch>
       </Router>

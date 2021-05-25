@@ -1,11 +1,22 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { LinkButton, Wrapper } from './Search'
+import { useHistory } from 'react-router-dom'
 
 const Home = () => {
+  const history = useHistory()
+
+  const handleClick = () => {
+    history.push('/search')
+  }
+
   return (
     <div>
       Hello this is Home!
-      <Link to="/search">search</Link>
+      <Wrapper>
+        <LinkButton variant="contained" color="primary" onClick={handleClick}>
+          Search
+        </LinkButton>
+      </Wrapper>
     </div>
   )
 }
