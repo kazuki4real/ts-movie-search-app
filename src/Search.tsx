@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -49,6 +49,13 @@ const Paper = styled.div`
   padding: 10px 15px;
 `
 
+const Wrapper_btn = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+`
+
 type Array = {
   id: string
   Poster: string
@@ -63,18 +70,26 @@ const API_KEY = '13e3e246'
 const Search = () => {
   const [movies, setMovie] = useState<Array[]>([])
   const [examples, setExamples] = useState<Array[]>([])
+  // const location = useLocation()
+  // const info: any = location.state
+  // const [fetchQuery] = useState({ fetchQuery: info.queryTitle })
   const [years] = useState<number[]>([2017, 2018, 2019, 2020, 2021])
   const [queryTitle, setqueryTitle] = useState<string>('')
   const [year, setYear] = useState<string>('')
   const history = useHistory()
 
+  // console.log(fetchQuery.fetchQuery)
+
+  // useEffect(() => {
+  //   setqueryTitle(fetchQuery.fetchQuery)
+  // }, [])
+
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    if (queryTitle === '') {
-      exampleApi()
-    } else {
-      getApiData(queryTitle, year)
+    if (examples) {
+      setExamples([])
     }
+    getApiData(queryTitle, year)
   }
 
   const getApiData = async (title: string, year: string): Promise<void> => {
@@ -109,8 +124,16 @@ const Search = () => {
     console.log(ID, Poster)
     history.push({
       pathname: '/search/' + ID,
-      state: { Poster: Poster, ID: ID, Title: Title }
+      state: { Poster: Poster, ID: ID, Title: Title, queryTitle: queryTitle, movie: movies }
     })
+  }
+
+  const handleRec = (e: any) => {
+    e.preventDefault()
+    if (movies) {
+      setMovie([])
+    }
+    exampleApi()
   }
 
   return (
@@ -137,37 +160,41 @@ const Search = () => {
             </SearchBtn>
           </form>
         </SearchBox>
-        <Main>
-          {queryTitle !== '' ? (
-            movies.map((movie: Array, index: number) => (
-              <ul>
-                {movie.Poster === 'N/A' ? null : (
-                  <Paper key={index + 'paper'}>
-                    <li key={index + 'li'}>{movie.Title}</li>
-                    <div key={index + 'link'} onClick={() => handleClick(movie.Poster, movie.imdbID, movie.Title)}>
-                      <img key={index + 'img'} src={movie.Poster} alt="MovieImage" width="300" height="445" />
-                    </div>
-                  </Paper>
-                )}
-              </ul>
-            ))
-          ) : (
-            <MainContent>
-              {examples.map((example: Array, index: number) => (
-                <Paper key={index}>
-                  <div key={index} onClick={() => handleClick(example.Poster, example.imdbID, example.Title)}>
-                    <img key={index} src={example.Poster} alt="MovieImage" width="300" height="445" />
-                  </div>
-                </Paper>
-              ))}
-            </MainContent>
-          )}
-        </Main>
       </Wrapper>
       <Wrapper>
-        <LinkButton variant="contained" color="primary" onClick={handleHome}>
-          Home
-        </LinkButton>
+        <Wrapper_btn>
+          <LinkButton variant="contained" color="primary" onClick={handleHome}>
+            Home
+          </LinkButton>
+          <LinkButton variant="contained" color="secondary" onClick={handleRec}>
+            See recommendation
+          </LinkButton>
+        </Wrapper_btn>
+      </Wrapper>
+      <Wrapper>
+        <Main>
+          {movies.map((movie: Array, index: number) => (
+            <ul>
+              {movie.Poster === 'N/A' ? null : (
+                <Paper key={index + 'paper'}>
+                  <li key={index + 'li'}>{movie.Title}</li>
+                  <div key={index + 'link'} onClick={() => handleClick(movie.Poster, movie.imdbID, movie.Title)}>
+                    <img key={index + 'img'} src={movie.Poster} alt="MovieImage" width="300" height="445" />
+                  </div>
+                </Paper>
+              )}
+            </ul>
+          ))}
+        </Main>
+        <MainContent>
+          {examples.map((example: Array, index: number) => (
+            <Paper key={index}>
+              <div key={index} onClick={() => handleClick(example.Poster, example.imdbID, example.Title)}>
+                <img key={index} src={example.Poster} alt="MovieImage" width="300" height="445" />
+              </div>
+            </Paper>
+          ))}
+        </MainContent>
       </Wrapper>
     </div>
   )

@@ -10,10 +10,13 @@ const Movie = () => {
   const history = useHistory()
   const location = useLocation()
   const info: any = location.state
-  const [data] = useState({ Poster: info.Poster, ID: info.ID, Title: info.Title })
+  const [data] = useState({ Poster: info.Poster, ID: info.ID, Title: info.Title, queryTitle: info.queryTitle })
 
   const handleClick = () => {
-    history.push('/search')
+    history.push({
+      pathname: '/search',
+      state: { queryTitle: info.queryTitle }
+    })
   }
 
   console.log(info)
