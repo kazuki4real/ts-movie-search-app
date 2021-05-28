@@ -18,10 +18,10 @@ const Movie = () => {
     Poster: info.Poster,
     ID: info.ID,
     Title: info.Title,
-    Movies: info.movies,
-    Examples: info.examples
-    // Movie_: info.movies_,
-    // Examples_: info.examples_
+    movies: info.movies,
+    examples: info.examples,
+    movies_: info.movies_,
+    examples_: info.examples_
   })
 
   type Unsub = () => void
@@ -53,11 +53,14 @@ const Movie = () => {
   const handleClick = () => {
     history.push({
       pathname: '/search',
-      state: { movies_: data.Movies, examples_: data.Examples /*, Movies_: data.Movie_, Examples_: data.Examples_*/ }
+      state: {
+        movies: data.movies,
+        examples: data.examples
+      }
     })
   }
 
-  console.log('info', info)
+  console.log('info_movie', info)
   console.log('datas', datas)
 
   return (

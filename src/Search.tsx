@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
-import { StringLiteral } from 'typescript'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -69,38 +68,29 @@ type Array = {
 const API_KEY = '13e3e246'
 
 const Search = () => {
-  const [movies, setMovie] = useState<Array[]>([])
-  const [examples, setExamples] = useState<Array[]>([])
   const location = useLocation()
   const info: any = location.state
+  const [movies, setMovie] = useState<Array[]>([])
+  const [examples, setExamples] = useState<Array[]>([])
+  // const [movies_, setMovie_] = useState<any>(info.movies)
+  // const [examples_, setExamples_] = useState<any>(info.examples)
   const [years] = useState<number[]>([2017, 2018, 2019, 2020, 2021])
   const [queryTitle, setqueryTitle] = useState<string>('')
   const [year, setYear] = useState<string>('')
   const history = useHistory()
-  // const [backData, setBackData] = useState<any>({})
+  const [duplicated, setDuplicated] = useState(false)
 
-  // useEffect(() => {
-  //   info.movies_.map((movie: any) => {
-  //     const datas_ = {
-  //       Poster: movie.Poster,
-  //       ID: movie.ID,
-  //       Title: movie.Title,
-  //       Movies: movie.movies_,
-  //       Examples: movie.examples_
-  //     }
-  //     setBackData(datas_)
-  //   })
-  // }, [])
-
-  console.log(info === undefined)
-
-  console.log('info', info)
-  // console.log('backData is', backData)
+  console.log('info_search', info)
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
     if (examples) {
       setExamples([])
+    }
+    if (info !== undefined) {
+      if (info.movies) {
+        setDuplicated(true)
+      }
     }
     getApiData(queryTitle, year)
   }
@@ -133,9 +123,10 @@ const Search = () => {
   }
 
   console.log('queryTitle', queryTitle)
-  console.log('movie', movies)
+  console.log('movies', movies)
   console.log('examples', examples)
   console.log('year', year)
+  console.log('movies log', movies.length === 0)
 
   const handleHome = () => {
     history.push('/')
@@ -149,9 +140,20 @@ const Search = () => {
         ID: ID,
         Title: Title,
         movies: movies,
-        examples: examples,
-        movies_: info.movies_,
-        examples_: info.examples_
+        examples: examples
+      }
+    })
+  }
+
+  const handleClickSecond = (Poster: string, ID: string, Title: String): void => {
+    history.push({
+      pathname: '/search/' + ID,
+      state: {
+        Poster: Poster,
+        ID: ID,
+        Title: Title,
+        movies: info.movies,
+        examples: info.examples
       }
     })
   }
@@ -160,6 +162,14 @@ const Search = () => {
     e.preventDefault()
     if (movies) {
       setMovie([])
+    }
+
+    if (info !== undefined) {
+      if (info.movies) {
+        setDuplicated(true)
+      } else if (info.examles) {
+        setDuplicated(true)
+      }
     }
     exampleApi()
   }
@@ -201,64 +211,59 @@ const Search = () => {
       </Wrapper>
       <Wrapper>
         <Main>
-          {movies.map((movie: Array, index: number) => (
-            <ul>
-              {movie.Poster === 'N/A' ? null : (
-                <Paper key={index + 'paper'}>
-                  <li key={index + 'li'}>{movie.Title}</li>
-                  <div key={index + 'link'} onClick={() => handleClick(movie.Poster, movie.imdbID, movie.Title)}>
-                    <img key={index + 'img'} src={movie.Poster} alt="MovieImage" width="300" height="445" />
-                  </div>
-                </Paper>
-              )}
-            </ul>
-          ))}
-          {info !== undefined &&
-            info.movies_.map((backMovie: Array, index: number) => (
+          {movies !== undefined &&
+            movies.map((movie: Array, index: number) => (
               <ul>
-                {backMovie.Poster === 'N/A' ? null : (
-                  <Paper key={index}>
-                    <li key={index + 'li'}>{backMovie.Title}</li>
-                    <div
-                      key={index + 'link'}
-                      onClick={() => handleClick(backMovie.Poster, backMovie.imdbID, backMovie.Title)}
-                    >
-                      <img key={index + 'img'} src={backMovie.Poster} alt="MovieImage" width="300" height="445" />
+                {movie.Poster === 'N/A' ? null : (
+                  <Paper key={index + 'paper'}>
+                    <li key={index + 'li'}>{movie.Title}</li>
+                    <div key={index + 'link'} onClick={() => handleClick(movie.Poster, movie.imdbID, movie.Title)}>
+                      <img key={index + 'img'} src={movie.Poster} alt="MovieImage" width="300" height="445" />
                     </div>
                   </Paper>
                 )}
               </ul>
             ))}
-          {/* {info !== undefined &&
-            info.Movies_.map((Movies: Array, index: number) => (
-              <ul>
-                {Movies.Poster === 'N/A' ? null : (
-                  <Paper key={index}>
-                    <li key={index + 'li'}>{Movies.Title}</li>
-                    <div key={index + 'link'} onClick={() => handleClick(Movies.Poster, Movies.imdbID, Movies.Title)}>
-                      <img key={index + 'img'} src={Movies.Poster} alt="MovieImage" width="300" height="445" />
-                    </div>
-                  </Paper>
-                )}
-              </ul>
-            ))} */}
+          {/* ２回目以降の処理 */}
+          {info !== undefined && !duplicated
+            ? info.movies.map((backMovie: Array, index: number) => (
+                <ul>
+                  {backMovie.Poster === 'N/A' ? null : (
+                    <Paper key={index}>
+                      <li key={index + 'li'}>{backMovie.Title}</li>
+                      <div
+                        key={index + 'link'}
+                        onClick={() => handleClickSecond(backMovie.Poster, backMovie.imdbID, backMovie.Title)}
+                      >
+                        <img key={index + 'img'} src={backMovie.Poster} alt="MovieImage" width="300" height="445" />
+                      </div>
+                    </Paper>
+                  )}
+                </ul>
+              ))
+            : null}
         </Main>
         <MainContent>
-          {examples.map((example: Array, index: number) => (
-            <Paper key={index}>
-              <div key={index} onClick={() => handleClick(example.Poster, example.imdbID, example.Title)}>
-                <img key={index} src={example.Poster} alt="MovieImage" width="300" height="445" />
-              </div>
-            </Paper>
-          ))}
-          {info &&
-            info.examples_.map((backExample: Array, index: number) => (
+          {examples !== undefined &&
+            examples.map((example: Array, index: number) => (
               <Paper key={index}>
-                <div key={index} onClick={() => handleClick(backExample.Poster, backExample.imdbID, backExample.Title)}>
-                  <img key={index} src={backExample.Poster} alt="MovieImage" width="300" height="445" />
+                <div key={index} onClick={() => handleClick(example.Poster, example.imdbID, example.Title)}>
+                  <img key={index} src={example.Poster} alt="MovieImage" width="300" height="445" />
                 </div>
               </Paper>
             ))}
+          {info !== undefined && !duplicated
+            ? info.examples.map((backExample: Array, index: number) => (
+                <Paper key={index}>
+                  <div
+                    key={index}
+                    onClick={() => handleClickSecond(backExample.Poster, backExample.imdbID, backExample.Title)}
+                  >
+                    <img key={index} src={backExample.Poster} alt="MovieImage" width="300" height="445" />
+                  </div>
+                </Paper>
+              ))
+            : null}
         </MainContent>
       </Wrapper>
     </div>
