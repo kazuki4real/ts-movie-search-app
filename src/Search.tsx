@@ -16,12 +16,6 @@ const Main = styled.div`
   flex-wrap: wrap;
 `
 
-const MainContent = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-`
-
 const SearchField = styled(TextField)`
   width: 100%;
   margin-top: 25px;
@@ -56,6 +50,10 @@ const WrapperBtn = styled.div`
   width: 80%;
 `
 
+const Ul = styled.ul`
+  padding-left: 0;
+`
+
 type Array = {
   id: string
   Poster: string
@@ -72,17 +70,15 @@ const Search = () => {
   const info: any = location.state
   const [movies, setMovie] = useState<Array[]>([])
   const [examples, setExamples] = useState<Array[]>([])
-  // const [movies_, setMovie_] = useState<any>(info.movies)
-  // const [examples_, setExamples_] = useState<any>(info.examples)
   const [years] = useState<number[]>([2017, 2018, 2019, 2020, 2021])
   const [queryTitle, setqueryTitle] = useState<string>('')
   const [year, setYear] = useState<string>('')
   const history = useHistory()
-  const [duplicated, setDuplicated] = useState(false)
+  const [duplicated, setDuplicated] = useState<boolean>(false)
 
   console.log('info_search', info)
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     if (examples) {
       setExamples([])
@@ -128,11 +124,11 @@ const Search = () => {
   console.log('year', year)
   console.log('movies log', movies.length === 0)
 
-  const handleHome = () => {
+  const handleHome = (): void => {
     history.push('/')
   }
 
-  const handleClick = (Poster: string, ID: string, Title: String) => {
+  const handleClick = (Poster: string, ID: string, Title: String): void => {
     history.push({
       pathname: '/search/' + ID,
       state: {
@@ -158,16 +154,16 @@ const Search = () => {
     })
   }
 
-  const handleRec = (e: any) => {
+  console.log('duplicated', duplicated)
+
+  const handleRec = (e: React.MouseEvent<Element, MouseEvent>): void => {
     e.preventDefault()
     if (movies) {
       setMovie([])
     }
 
     if (info !== undefined) {
-      if (info.movies) {
-        setDuplicated(true)
-      } else if (info.examles) {
+      if (info.movies || info.examles) {
         setDuplicated(true)
       }
     }
@@ -178,7 +174,7 @@ const Search = () => {
     <div>
       <Wrapper>
         <SearchBox>
-          <form onSubmit={(e) => handleSubmit(e)}>
+          <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
             <SearchField
               id="outlined-basic"
               label="Search series..."
@@ -213,7 +209,7 @@ const Search = () => {
         <Main>
           {movies !== undefined &&
             movies.map((movie: Array, index: number) => (
-              <ul>
+              <Ul>
                 {movie.Poster === 'N/A' ? null : (
                   <Paper key={index + 'paper'}>
                     <li key={index + 'li'}>{movie.Title}</li>
@@ -222,12 +218,12 @@ const Search = () => {
                     </div>
                   </Paper>
                 )}
-              </ul>
+              </Ul>
             ))}
           {/* ２回目以降の処理 */}
           {info !== undefined && !duplicated
             ? info.movies.map((backMovie: Array, index: number) => (
-                <ul>
+                <Ul>
                   {backMovie.Poster === 'N/A' ? null : (
                     <Paper key={index}>
                       <li key={index + 'li'}>{backMovie.Title}</li>
@@ -239,11 +235,11 @@ const Search = () => {
                       </div>
                     </Paper>
                   )}
-                </ul>
+                </Ul>
               ))
             : null}
         </Main>
-        <MainContent>
+        <Main>
           {examples !== undefined &&
             examples.map((example: Array, index: number) => (
               <Paper key={index}>
@@ -264,7 +260,7 @@ const Search = () => {
                 </Paper>
               ))
             : null}
-        </MainContent>
+        </Main>
       </Wrapper>
     </div>
   )

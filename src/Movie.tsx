@@ -4,8 +4,67 @@ import { LinkButton, Wrapper } from './Search'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { db } from './firebase'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 
-const Title = styled.h1``
+const Title = styled.h1`
+  text-align: center;
+`
+
+const MainSection = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
+`
+
+const List = styled.li`
+  word-break: break-all;
+  width: 100%;
+  list-style: none;
+  padding: 15px 0;
+`
+
+const Image = styled.div`
+  padding: 25px;
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin-left: 25px;
+`
+
+// const Input = styled(TextField)`
+//   width: 20%;
+// `
+const TextArea = styled(TextareaAutosize)`
+  width: 100%;
+  height: 60px;
+  background-color: inherit;
+  margin-bottom: 15px;
+`
+
+const ListContainer = styled.div`
+  margin-top: 10px;
+`
+
+const Field = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+const Btn = styled(Button)`
+  display: flex;
+  align-items: flex-end;
+`
 
 const Movie = () => {
   const history = useHistory()
@@ -19,21 +78,22 @@ const Movie = () => {
     ID: info.ID,
     Title: info.Title,
     movies: info.movies,
-    examples: info.examples,
-    movies_: info.movies_,
-    examples_: info.examples_
+    examples: info.examples
   })
 
   type Unsub = () => void
 
   useEffect(() => {
-    const unsubscribe: Unsub = db.collection('ratings').onSnapshot((snapshot: any) => {
-      const dataSet = snapshot.docs.map((doc: any) => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-      setData(dataSet)
-    })
+    const unsubscribe: Unsub = db
+      .collection('ratings')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((snapshot: any) => {
+        const dataSet = snapshot.docs.map((doc: any) => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        setData(dataSet)
+      })
     return () => unsubscribe()
   }, [])
 
@@ -64,23 +124,54 @@ const Movie = () => {
   console.log('datas', datas)
 
   return (
-    <div>
+    <div id="movie_each">
       <p>imdbID: {data.ID}</p>
       <Title>{data.Title}</Title>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <input type="text" placeholder="ratings" value={ratings} onChange={(e) => setRatings(e.target.value)} />
-        <button type="submit">add</button>
-      </form>
-      <img src={data.Poster} alt="movieImage" />
-      {datas &&
-        datas.map((each: any) =>
-          each.imdbID === data.ID ? (
-            <li>
-              {each.title} {each.ratings}/5
-            </li>
-          ) : null
-        )}
+      <MainSection>
+        <Image>
+          <img src={data.Poster} alt="movieImage" />
+        </Image>
+        <Form onSubmit={handleSubmit}>
+          <Field>
+            <TextArea
+              value={title}
+              aria-label="minimum height"
+              rowsMin={3}
+              placeholder="Minimum 3 rows"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            {/* <Input
+              id="outlined-basic"
+              label="感想"
+              variant="outlined"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            /> */}
+            {/* <Input
+              id="outlined-basic"
+              label="ratings"
+              variant="outlined"
+              type="text"
+              value={ratings}
+              onChange={(e) => setRatings(e.target.value)}
+            /> */}
+            <Btn variant="contained" color="primary" type="submit">
+              add
+            </Btn>
+            <ListContainer>
+              {datas &&
+                datas.map((each: any) =>
+                  each.imdbID === data.ID ? (
+                    <List>
+                      {each.title} {each.ratings}/5
+                    </List>
+                  ) : null
+                )}
+            </ListContainer>
+          </Field>
+        </Form>
+      </MainSection>
       <Wrapper>
         <LinkButton variant="contained" color="primary" onClick={handleClick}>
           Search
