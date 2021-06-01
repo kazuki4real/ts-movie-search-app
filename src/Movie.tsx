@@ -47,7 +47,7 @@ const TextArea = styled(TextareaAutosize)`
   width: 100%;
   height: 60px;
   background-color: inherit;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `
 
 const ListContainer = styled.div`
