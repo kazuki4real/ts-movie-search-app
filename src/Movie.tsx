@@ -45,9 +45,11 @@ const Form = styled.form`
 // `
 const TextArea = styled(TextareaAutosize)`
   width: 100%;
-  height: 60px;
   background-color: inherit;
   margin-bottom: 20px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
 `
 
 const ListContainer = styled.div`
@@ -55,7 +57,7 @@ const ListContainer = styled.div`
 `
 
 const Field = styled.div`
-  width: 90%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -64,6 +66,7 @@ const Field = styled.div`
 const Btn = styled(Button)`
   display: flex;
   align-items: flex-end;
+  width: 100%;
 `
 
 const Movie = () => {
@@ -137,7 +140,7 @@ const Movie = () => {
               value={title}
               aria-label="minimum height"
               rowsMin={3}
-              placeholder="Minimum 3 rows"
+              placeholder="Let me know your what you felt about this movie..."
               onChange={(e) => setTitle(e.target.value)}
             />
             {/* <Input
@@ -160,14 +163,7 @@ const Movie = () => {
               add
             </Btn>
             <ListContainer>
-              {datas &&
-                datas.map((each: any) =>
-                  each.imdbID === data.ID ? (
-                    <List>
-                      {each.title} {each.ratings}/5
-                    </List>
-                  ) : null
-                )}
+              {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
             </ListContainer>
           </Field>
         </Form>

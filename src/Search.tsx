@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
+import { Alert, AlertTitle } from '@material-ui/lab'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -54,6 +55,10 @@ const Ul = styled.ul`
   padding-left: 0;
 `
 
+const EmptyErr = styled.p`
+  width: 80%;
+`
+
 type Array = {
   id: string
   Poster: string
@@ -75,11 +80,14 @@ const Search = () => {
   const [year, setYear] = useState<string>('')
   const history = useHistory()
   const [duplicated, setDuplicated] = useState<boolean>(false)
+  const [empty, setEmpty] = useState<string>('')
 
   console.log('info_search', info)
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
+    setEmpty('')
+
     if (examples) {
       setExamples([])
     }
@@ -89,6 +97,10 @@ const Search = () => {
       }
     }
     getApiData(queryTitle, year)
+
+    if (movies.length == 0) {
+      setEmpty('empty')
+    }
   }
 
   const getApiData = async (title: string, year: string): Promise<void> => {
@@ -158,6 +170,7 @@ const Search = () => {
 
   const handleRec = (e: React.MouseEvent<Element, MouseEvent>): void => {
     e.preventDefault()
+    setEmpty('')
     if (movies) {
       setMovie([])
     }
@@ -168,6 +181,10 @@ const Search = () => {
       }
     }
     exampleApi()
+
+    if (examples.length == 0) {
+      setEmpty('empty')
+    }
   }
 
   return (
@@ -239,7 +256,7 @@ const Search = () => {
               ))
             : null}
         </Main>
-        <Main>
+        <Main id="main">
           {examples !== undefined &&
             examples.map((example: Array, index: number) => (
               <Paper key={index}>
@@ -261,6 +278,13 @@ const Search = () => {
               ))
             : null}
         </Main>
+        {movies.length === 0 && examples.length === 0 ? (
+          <EmptyErr hidden={empty === ''}>
+            <Alert variant="outlined" severity="error">
+              {empty}
+            </Alert>
+          </EmptyErr>
+        ) : null}
       </Wrapper>
     </div>
   )
