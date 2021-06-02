@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Alert, AlertTitle } from '@material-ui/lab'
+import MovieList from './MovieList'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   justify-content: center;
 `
 
-const Main = styled.div`
+export const Main = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -40,7 +40,7 @@ const SearchBtn = styled(Button)`
   width: 100%;
 `
 
-const Paper = styled.div`
+export const Paper = styled.div`
   padding: 10px 15px;
 `
 
@@ -51,15 +51,15 @@ const WrapperBtn = styled.div`
   width: 80%;
 `
 
-const Ul = styled.ul`
+export const Ul = styled.ul`
   padding-left: 0;
 `
 
-const EmptyErr = styled.p`
+export const EmptyErr = styled.p`
   width: 80%;
 `
 
-type Array = {
+export type Array = {
   id: string
   Poster: string
   Title: string
@@ -222,70 +222,15 @@ const Search = () => {
           </LinkButton>
         </WrapperBtn>
       </Wrapper>
-      <Wrapper>
-        <Main>
-          {movies !== undefined &&
-            movies.map((movie: Array, index: number) => (
-              <Ul>
-                {movie.Poster === 'N/A' ? null : (
-                  <Paper key={index + 'paper'}>
-                    <li key={index + 'li'}>{movie.Title}</li>
-                    <div key={index + 'link'} onClick={() => handleClick(movie.Poster, movie.imdbID, movie.Title)}>
-                      <img key={index + 'img'} src={movie.Poster} alt="MovieImage" width="300" height="445" />
-                    </div>
-                  </Paper>
-                )}
-              </Ul>
-            ))}
-          {/* ２回目以降の処理 */}
-          {info !== undefined && !duplicated
-            ? info.movies.map((backMovie: Array, index: number) => (
-                <Ul>
-                  {backMovie.Poster === 'N/A' ? null : (
-                    <Paper key={index}>
-                      <li key={index + 'li'}>{backMovie.Title}</li>
-                      <div
-                        key={index + 'link'}
-                        onClick={() => handleClickSecond(backMovie.Poster, backMovie.imdbID, backMovie.Title)}
-                      >
-                        <img key={index + 'img'} src={backMovie.Poster} alt="MovieImage" width="300" height="445" />
-                      </div>
-                    </Paper>
-                  )}
-                </Ul>
-              ))
-            : null}
-        </Main>
-        <Main id="main">
-          {examples !== undefined &&
-            examples.map((example: Array, index: number) => (
-              <Paper key={index}>
-                <div key={index} onClick={() => handleClick(example.Poster, example.imdbID, example.Title)}>
-                  <img key={index} src={example.Poster} alt="MovieImage" width="300" height="445" />
-                </div>
-              </Paper>
-            ))}
-          {info !== undefined && !duplicated
-            ? info.examples.map((backExample: Array, index: number) => (
-                <Paper key={index}>
-                  <div
-                    key={index}
-                    onClick={() => handleClickSecond(backExample.Poster, backExample.imdbID, backExample.Title)}
-                  >
-                    <img key={index} src={backExample.Poster} alt="MovieImage" width="300" height="445" />
-                  </div>
-                </Paper>
-              ))
-            : null}
-        </Main>
-        {movies.length === 0 && examples.length === 0 ? (
-          <EmptyErr hidden={empty === ''}>
-            <Alert variant="outlined" severity="error">
-              {empty}
-            </Alert>
-          </EmptyErr>
-        ) : null}
-      </Wrapper>
+      <MovieList
+        handleClick={handleClick}
+        handleClickSecond={handleClickSecond}
+        movies={movies}
+        examples={examples}
+        info={info}
+        duplicated={duplicated}
+        empty={empty}
+      />
     </div>
   )
 }

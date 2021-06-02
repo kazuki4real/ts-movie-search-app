@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { db } from './firebase'
 import TextField from '@material-ui/core/TextField'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 
@@ -43,6 +44,7 @@ const Form = styled.form`
 // const Input = styled(TextField)`
 //   width: 20%;
 // `
+
 const TextArea = styled(TextareaAutosize)`
   width: 100%;
   background-color: inherit;
@@ -74,7 +76,7 @@ const Movie = () => {
   const location = useLocation()
   const [datas, setData] = useState<any>()
   const [title, setTitle] = useState<any>('')
-  const [ratings, setRatings] = useState<any>('')
+  const [loading, setLoading] = useState<boolean>(false)
   const info: any = location.state
   const [data] = useState({
     Poster: info.Poster,
@@ -87,6 +89,7 @@ const Movie = () => {
   type Unsub = () => void
 
   useEffect(() => {
+    setLoading(true)
     const unsubscribe: Unsub = db
       .collection('ratings')
       .orderBy('timestamp', 'desc')
@@ -96,7 +99,9 @@ const Movie = () => {
           ...doc.data()
         }))
         setData(dataSet)
+        setLoading(false)
       })
+
     return () => unsubscribe()
   }, [])
 
@@ -104,12 +109,11 @@ const Movie = () => {
     e.preventDefault()
     db.collection('ratings').add({
       title,
-      ratings,
+      // ratings,
       timestamp: Date.now(),
       imdbID: data.ID
     })
 
-    setRatings('')
     setTitle('')
   }
 
@@ -125,9 +129,10 @@ const Movie = () => {
 
   console.log('info_movie', info)
   console.log('datas', datas)
+  console.log('loading', loading)
 
   return (
-    <div id="movie_each">
+    <div>
       <p>imdbID: {data.ID}</p>
       <Title>{data.Title}</Title>
       <MainSection>
@@ -162,9 +167,13 @@ const Movie = () => {
             <Btn variant="contained" color="primary" type="submit">
               add
             </Btn>
-            <ListContainer>
-              {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
-            </ListContainer>
+            {loading ? (
+              <CircularProgress color="secondary" />
+            ) : (
+              <ListContainer>
+                {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
+              </ListContainer>
+            )}
           </Field>
         </Form>
       </MainSection>
