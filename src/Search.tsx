@@ -82,8 +82,6 @@ const Search = () => {
   const [duplicated, setDuplicated] = useState<boolean>(false)
   const [empty, setEmpty] = useState<string>('')
 
-  console.log('info_search', info)
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     setEmpty('')
@@ -97,10 +95,6 @@ const Search = () => {
       }
     }
     getApiData(queryTitle, year)
-
-    if (movies.length == 0) {
-      setEmpty('empty')
-    }
   }
 
   const getApiData = async (title: string, year: string): Promise<void> => {
@@ -111,6 +105,12 @@ const Search = () => {
 
       if (resJson.Search) {
         setMovie(resJson.Search)
+      }
+
+      if (!resJson.Search) {
+        setEmpty('empty')
+        setMovie([])
+        setExamples([])
       }
     } catch (err) {
       alert(err)
@@ -130,11 +130,14 @@ const Search = () => {
     }
   }
 
+  console.log('info_search', info)
   console.log('queryTitle', queryTitle)
   console.log('movies', movies)
   console.log('examples', examples)
   console.log('year', year)
   console.log('movies log', movies.length === 0)
+  console.log('duplicated', duplicated)
+  console.log('empty', empty === '')
 
   const handleHome = (): void => {
     history.push('/')
@@ -166,8 +169,6 @@ const Search = () => {
     })
   }
 
-  console.log('duplicated', duplicated)
-
   const handleRec = (e: React.MouseEvent<Element, MouseEvent>): void => {
     e.preventDefault()
     setEmpty('')
@@ -181,10 +182,6 @@ const Search = () => {
       }
     }
     exampleApi()
-
-    if (examples.length == 0) {
-      setEmpty('empty')
-    }
   }
 
   return (
