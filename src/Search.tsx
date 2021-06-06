@@ -105,10 +105,8 @@ const Search = () => {
 
       if (resJson.Search) {
         setMovie(resJson.Search)
-      }
-
-      if (!resJson.Search) {
-        setEmpty('empty')
+      } else {
+        setEmpty('検索結果が表示できませんでした')
         setMovie([])
         setExamples([])
       }

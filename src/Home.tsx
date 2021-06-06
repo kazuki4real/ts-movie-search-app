@@ -5,16 +5,23 @@ import { useHistory } from 'react-router-dom'
 const Home = () => {
   const history = useHistory()
 
-  const handleClick = () => {
-    history.push('/search')
+  const handleClick = (point: number) => {
+    if (point === 0) {
+      history.push('/search')
+    } else {
+      history.push('/test')
+    }
   }
 
   return (
     <div>
       Hello this is Home!
       <Wrapper>
-        <LinkButton variant="contained" color="primary" onClick={handleClick}>
+        <LinkButton variant="contained" color="primary" onClick={() => handleClick(0)}>
           Search
+        </LinkButton>
+        <LinkButton variant="contained" color="secondary" onClick={() => handleClick(1)}>
+          Test
         </LinkButton>
       </Wrapper>
     </div>

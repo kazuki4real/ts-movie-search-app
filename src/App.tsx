@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import Home from './Home'
 import Search from './Search'
 import Movie from './Movie'
+import Test from './Test'
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -30,6 +31,7 @@ const App: React.FC = () => {
           <Route path="/search/:imdbID">
             <Movie />
           </Route>
+          <Route path="/test" component={Test} />
           <Redirect to="/" />
         </Switch>
       </Router>

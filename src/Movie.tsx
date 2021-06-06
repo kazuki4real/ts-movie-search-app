@@ -4,8 +4,7 @@ import { LinkButton, Wrapper } from './Search'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { db } from './firebase'
-import TextField from '@material-ui/core/TextField'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import LinearProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 
@@ -167,13 +166,10 @@ const Movie = () => {
             <Btn variant="contained" color="primary" type="submit">
               add
             </Btn>
-            {loading ? (
-              <CircularProgress color="secondary" />
-            ) : (
-              <ListContainer>
-                {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
-              </ListContainer>
-            )}
+            {loading && <LinearProgress />}
+            <ListContainer>
+              {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
+            </ListContainer>
           </Field>
         </Form>
       </MainSection>
