@@ -1,7 +1,5 @@
 import React from 'react'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import './App.css'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import Home from './Home'
 import Search from './Search'
@@ -9,33 +7,18 @@ import Movie from './Movie'
 import Test from './Test'
 
 const App: React.FC = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-
-  const theme = React.useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          type: prefersDarkMode ? 'dark' : 'light'
-        }
-      }),
-    [prefersDarkMode]
-  )
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/search/" component={Search} />
-          <Route path="/search/:imdbID">
-            <Movie />
-          </Route>
-          <Route path="/test" component={Test} />
-          <Redirect to="/" />
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/search/" component={Search} />
+        <Route path="/search/:imdbID">
+          <Movie />
+        </Route>
+        <Route path="/test" component={Test} />
+        <Redirect to="/" />
+      </Switch>
+    </Router>
   )
 }
 

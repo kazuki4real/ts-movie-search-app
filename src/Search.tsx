@@ -15,16 +15,19 @@ export const Main = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  display: flex;
+  margin-top: 15px;
+  background: #8a858586;
+  width: 80%;
+  border-radius: 5px;
 `
 
 const SearchField = styled(TextField)`
   width: 100%;
-  margin-top: 25px;
 `
 
 export const LinkButton = styled(Button)`
-  width: 50%;
-  margin: 25px 0;
+  width: 45%;
 `
 
 const SearchBox = styled.div`
@@ -47,12 +50,14 @@ export const Paper = styled.div`
 const WrapperBtn = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 80%;
 `
 
 export const Ul = styled.ul`
   padding-left: 0;
+  text-align: center;
+  list-style: none;
 `
 
 export const EmptyErr = styled.p`
@@ -188,6 +193,7 @@ const Search = () => {
         <SearchBox>
           <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
             <SearchField
+              style={{ marginTop: '45px', marginBottom: '20px' }}
               id="outlined-basic"
               label="Search series..."
               variant="outlined"
@@ -195,6 +201,7 @@ const Search = () => {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setqueryTitle(e.target.value)}
             />
             <SearchField
+              style={{ marginBottom: '20px' }}
               id="outlined-basic"
               label="Search by Year..."
               variant="outlined"
@@ -202,18 +209,18 @@ const Search = () => {
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setYear(e.target.value)}
             />
             <SearchBtn variant="contained" type="submit">
-              Search
+              検索
             </SearchBtn>
           </form>
         </SearchBox>
       </Wrapper>
       <Wrapper>
         <WrapperBtn>
-          <LinkButton variant="contained" color="primary" onClick={handleHome}>
-            Home
+          <LinkButton style={{ marginTop: '10px' }} color="primary" variant="outlined" onClick={handleHome}>
+            ホームへ
           </LinkButton>
-          <LinkButton variant="contained" color="secondary" onClick={handleRec}>
-            See recommendation
+          <LinkButton style={{ marginTop: '10px' }} color="secondary" variant="outlined" onClick={handleRec}>
+            おすすめをみる
           </LinkButton>
         </WrapperBtn>
       </Wrapper>

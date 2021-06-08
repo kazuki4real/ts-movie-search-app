@@ -48,7 +48,6 @@ const TextArea = styled(TextareaAutosize)`
   width: 100%;
   background-color: inherit;
   margin-bottom: 20px;
-  color: white;
   font-size: 15px;
   font-weight: 600;
 `
@@ -132,7 +131,7 @@ const Movie = () => {
 
   return (
     <div>
-      <p>imdbID: {data.ID}</p>
+      {/* <p>imdbID: {data.ID}</p> */}
       <Title>{data.Title}</Title>
       <MainSection>
         <Image>
@@ -144,7 +143,7 @@ const Movie = () => {
               value={title}
               aria-label="minimum height"
               rowsMin={3}
-              placeholder="Let me know your what you felt about this movie..."
+              placeholder="この作品は..."
               onChange={(e) => setTitle(e.target.value)}
             />
             {/* <Input
@@ -164,7 +163,7 @@ const Movie = () => {
               onChange={(e) => setRatings(e.target.value)}
             /> */}
             <Btn variant="contained" color="primary" type="submit">
-              add
+              書き込む
             </Btn>
             {loading && <LinearProgress />}
             <ListContainer>
@@ -174,8 +173,8 @@ const Movie = () => {
         </Form>
       </MainSection>
       <Wrapper>
-        <LinkButton variant="contained" color="primary" onClick={handleClick}>
-          Search
+        <LinkButton style={{ marginBottom: '25px' }} variant="outlined" onClick={handleClick}>
+          戻る
         </LinkButton>
       </Wrapper>
     </div>

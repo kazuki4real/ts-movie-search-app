@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { testData } from './data'
 import styled from 'styled-components'
+import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import { Switch } from '@material-ui/core'
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,7 +22,7 @@ const Container = styled.div`
   width: 80%;
   margin-top: 25px;
   padding: 15px 30px;
-  background: #dddddd83;
+  background: #8f8c8c83;
   border-radius: 5px;
 `
 
@@ -40,15 +43,17 @@ const List = styled.p`
   list-style: none;
   margin: 25px 0;
   font-size: 25px;
-  background: #393232ab;
+  border: solid 1px #393232ab;
   padding: 10px 0;
   border-radius: 5px;
   user-select: none;
   padding-left: 10px;
 
   &:hover {
-    opacity: 50%;
+    transform: scale(1.02);
     cursor: pointer;
+    transition-duration: 0.5s;
+    border: solid 1px #3f51b5;
   }
 `
 
@@ -66,76 +71,120 @@ const Result = styled.ul`
 const CurrentNum = styled.p`
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  text-decoration: underline;
+`
+
+const BackHome = styled(Button)`
+  display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
+  margin-top: 15px;
 `
 
 const Test = () => {
-  const [valA, setValA] = useState<number>(0)
-  const [valB, setValB] = useState<number>(0)
-  const [valC, setValC] = useState<number>(0)
-  const [currentQuestion, setCurrentQuestion] = useState<number>(1)
+  const [valA, setValA] = React.useState<number>(0)
+  const [valB, setValB] = React.useState<number>(0)
+  const [valC, setValC] = React.useState<number>(0)
+  const [result, setResult] = React.useState<string>('')
+  const [thinking, setThinking] = React.useState<boolean>(true)
+  const [currentQuestion, setCurrentQuestion] = React.useState<number>(1)
   const history = useHistory()
 
   const answers = ['そう思う', 'そう思わない', 'よくわからない']
 
-  const handleClick = (point: number): void => {
-    if (currentQuestion < 21) {
-      if (point === 5) {
-        setValA(valA + 5)
-      } else if (point === 3) {
-        setValB(valB + 3)
+  //回答されたときの得点加算処理
+  const handleClick = (value: string): void => {
+    if (currentQuestion < 11) {
+      if (value === 'valA') {
+        setValA(valA + 1)
+      } else if (value === 'valB') {
+        setValB(valB + 1)
       } else {
         setValC(valC + 1)
       }
       setCurrentQuestion(currentQuestion + 1)
     }
-  }
 
-  const showResult = (valA: number, valB: number, valC: number) => {
-    if (valA > 10) {
-      return 'valA'
-    } else {
-      return 'val else'
+    if (currentQuestion === 10) {
+      setTimeout(showResult, 2000)
+      console.log('called')
     }
   }
 
+  console.log('val', valA, valB, valC)
+
+  console.log('result', result)
+  console.log('thinking', thinking)
+
+  //最終結果の表示
+  const showResult = () => {
+    !thinking && setThinking(true)
+
+    if (valA > valB && valA > valC) {
+      setResult('トレンドからオールドファッションまで幅広く観たいあなた')
+    } else if (valB > valA && valB > valC) {
+      setResult('新しいジャンルにも挑戦してみたいあなた')
+    } else if (valC > valA && valC > valB) {
+      setResult('みたいものが気分によってバラバラなあなた')
+    } else {
+      setResult('王道をしっかり押さえておきたいあなた')
+    }
+    setThinking(false)
+  }
+
+  //test againをしたときの初期化
   const reset = (): void => {
     setCurrentQuestion(1)
     setValA(0)
     setValB(0)
     setValC(0)
+    setResult('')
+    setThinking(true)
   }
 
+  //ホームへ戻る
   const handleHome = (): void => {
     history.push('/')
   }
 
-  console.log(valA)
+  const handleSearch = (): void => {
+    history.push('/search')
+  }
 
   return (
     <Wrapper>
       <Container>
         {currentQuestion < 11 && (
           <div>
+            <CurrentNum> No. {currentQuestion}/10</CurrentNum>
             <Question>{testData.questions[currentQuestion - 1].question}</Question>
             <AnswerSection>
               <Ul>
-                <List onClick={() => handleClick(5)}>{answers[0]}</List>
-                <List onClick={() => handleClick(1)}>{answers[1]}</List>
-                <List onClick={() => handleClick(3)}>{answers[2]}</List>
+                <List onClick={() => handleClick('valA')}>{answers[0]}</List>
+                <List onClick={() => handleClick('valB')}>{answers[1]}</List>
+                <List onClick={() => handleClick('valC')}>{answers[2]}</List>
               </Ul>
             </AnswerSection>
-            <CurrentNum>{currentQuestion}/10</CurrentNum>
           </div>
         )}
         {currentQuestion === 11 && (
           <Result>
-            <p>{showResult(valA, valB, valC)}</p>
-            <button onClick={reset}>Test again</button>
+            {thinking ? (
+              <LinearProgress />
+            ) : (
+              <div>
+                <p>{result}</p>
+                <button onClick={reset}>Test again</button>
+                <button onClick={handleSearch}>go to search</button>
+              </div>
+            )}
           </Result>
         )}
       </Container>
-      <button onClick={handleHome}>Home</button>
+      <BackHome variant="contained" color="primary" onClick={handleHome}>
+        Home
+      </BackHome>
     </Wrapper>
   )
 }
