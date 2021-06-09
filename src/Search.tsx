@@ -104,7 +104,7 @@ const Search = () => {
 
   const getApiData = async (title: string, year: string): Promise<void> => {
     try {
-      const url = `http://www.omdbapi.com/?apikey=${API_KEY}&s=${title}&y=${year}`
+      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${title}&y=${year}`
       const response = await fetch(url)
       const resJson = await response.json()
 
@@ -124,7 +124,7 @@ const Search = () => {
     try {
       const initialTitle = 'you'
       const randomNum = Math.floor(Math.random() * years.length)
-      const url = `http://www.omdbapi.com/?apikey=${API_KEY}&s=${initialTitle}&y=${years[randomNum]}`
+      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${initialTitle}&y=${years[randomNum]}`
       const res = await fetch(url)
       const resJson = await res.json()
       setExamples(resJson.Search)

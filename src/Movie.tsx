@@ -7,9 +7,17 @@ import { db } from './firebase'
 import LinearProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
+import { pc, sp, tab } from './media'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import './App.css'
 
 const Title = styled.h1`
   text-align: center;
+  margin-top: 35px;
+
+  ${sp`
+  margin-bottom: 0;
+  `}
 `
 
 const MainSection = styled.div`
@@ -22,10 +30,14 @@ const MainSection = styled.div`
 `
 
 const List = styled.li`
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
   word-break: break-all;
   width: 100%;
   list-style: none;
   padding: 15px 0;
+  margin-top: 0;
 `
 
 const Image = styled.div`
@@ -38,6 +50,11 @@ const Form = styled.form`
   align-items: center;
   width: 50%;
   margin-left: 25px;
+
+  ${sp`
+    margin-left: 0;
+    width: 95%;
+  `}
 `
 
 // const Input = styled(TextField)`
@@ -53,6 +70,7 @@ const TextArea = styled(TextareaAutosize)`
 `
 
 const ListContainer = styled.div`
+  width: 100%;
   margin-top: 10px;
 `
 
@@ -69,11 +87,25 @@ const Btn = styled(Button)`
   width: 100%;
 `
 
+const Error = styled.p`
+  color: red;
+  margin-top: 0;
+`
+const Time = styled.p`
+  text-align: right;
+`
+
+const Hr = styled.hr`
+  color: #000;
+  width: 100%;
+`
+
 const Movie = () => {
   const history = useHistory()
   const location = useLocation()
   const [datas, setData] = useState<any>()
   const [title, setTitle] = useState<any>('')
+  const [error, setError] = useState<any>('')
   const [loading, setLoading] = useState<boolean>(false)
   const info: any = location.state
   const [data] = useState({
@@ -105,6 +137,13 @@ const Movie = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+    setError('')
+
+    if (title === '') {
+      setError('Please leave the comments before you post')
+      return
+    }
+
     db.collection('ratings').add({
       title,
       // ratings,
@@ -125,9 +164,18 @@ const Movie = () => {
     })
   }
 
+  const timeConvert = (timestamp: any) => {
+    const today = new Date(timestamp)
+    const year = today.getFullYear()
+    const month = today.getMonth() + 1
+    const day = today.getDate() + 1
+    return `${year}/${month}/${day}`
+  }
+
   console.log('info_movie', info)
   console.log('datas', datas)
   console.log('loading', loading)
+  console.log('title', title)
 
   return (
     <div>
@@ -162,18 +210,31 @@ const Movie = () => {
               value={ratings}
               onChange={(e) => setRatings(e.target.value)}
             /> */}
+            <Error>{error}</Error>
             <Btn variant="contained" color="primary" type="submit">
               書き込む
             </Btn>
             {loading && <LinearProgress />}
-            <ListContainer>
-              {datas && datas.map((each: any) => (each.imdbID === data.ID ? <List>{each.title}</List> : null))}
+            <ListContainer id="containe">
+              {datas &&
+                datas.map((each: any) =>
+                  each.imdbID === data.ID ? (
+                    <div>
+                      <List>
+                        <AccountCircleIcon />
+                        <span style={{ marginBottom: '5px' }}>{each.title}</span>
+                      </List>
+                      <Time>{timeConvert(each.timestamp)}</Time>
+                      <Hr color="#000" />
+                    </div>
+                  ) : null
+                )}
             </ListContainer>
           </Field>
         </Form>
       </MainSection>
       <Wrapper>
-        <LinkButton style={{ marginBottom: '25px' }} variant="outlined" onClick={handleClick}>
+        <LinkButton style={{ marginBottom: '25px', marginTop: '15px' }} variant="outlined" onClick={handleClick}>
           戻る
         </LinkButton>
       </Wrapper>

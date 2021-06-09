@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router-dom'
+import { pc, sp, tab } from './media'
 
 const WrapperHome = styled.div`
   display: flex;
@@ -27,6 +28,14 @@ const LinkButton = styled.button`
     cursor: pointer;
     transition-duration: 0.5s;
   }
+
+  ${sp`
+    width: 80%;
+  `}
+
+  ${tab`
+    width: 80%;
+  `}
 `
 
 const Home = () => {

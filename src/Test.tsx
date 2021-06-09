@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { Switch } from '@material-ui/core'
+import { pc, sp, tab } from './media'
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,6 +24,10 @@ const Container = styled.div`
   padding: 15px 30px;
   background: #8f8c8c83;
   border-radius: 5px;
+
+  ${sp`
+    width: 70%;
+  `}
 `
 
 const Question = styled.h1`
@@ -31,6 +35,10 @@ const Question = styled.h1`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
+  ${sp`
+    font-size: 20px;
+  `}
 `
 
 const AnswerSection = styled.div`
@@ -58,7 +66,7 @@ const List = styled.p`
 `
 
 const Ul = styled.ul`
-  padding-left: 0;
+  padding: 0;
 `
 
 const Result = styled.ul`
@@ -66,6 +74,8 @@ const Result = styled.ul`
   flex-wrap: wrap;
   flex-direction: column;
   font-size: 25px;
+  padding-left: 0;
+  text-align: center;
 `
 
 const CurrentNum = styled.p`
@@ -79,7 +89,6 @@ const BackHome = styled(Button)`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  margin-top: 15px;
 `
 
 const Test = () => {
@@ -160,7 +169,7 @@ const Test = () => {
             <CurrentNum> No. {currentQuestion}/10</CurrentNum>
             <Question>{testData.questions[currentQuestion - 1].question}</Question>
             <AnswerSection>
-              <Ul>
+              <Ul id="ul">
                 <List onClick={() => handleClick('valA')}>{answers[0]}</List>
                 <List onClick={() => handleClick('valB')}>{answers[1]}</List>
                 <List onClick={() => handleClick('valC')}>{answers[2]}</List>
@@ -182,7 +191,7 @@ const Test = () => {
           </Result>
         )}
       </Container>
-      <BackHome variant="contained" color="primary" onClick={handleHome}>
+      <BackHome style={{ marginTop: '15px' }} variant="contained" color="primary" onClick={handleHome}>
         Home
       </BackHome>
     </Wrapper>
