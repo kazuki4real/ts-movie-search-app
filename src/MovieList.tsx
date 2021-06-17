@@ -2,7 +2,7 @@ import React from 'react'
 import { Wrapper, Main, Ul, Paper, EmptyErr, Array } from './Search'
 import { Alert } from '@material-ui/lab'
 import styled from 'styled-components'
-import { pc, sp, tab } from './media'
+import { sp } from './media'
 
 const Image = styled.img`
   width: 300px;

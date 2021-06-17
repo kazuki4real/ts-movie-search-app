@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { testData } from './data'
 import styled from 'styled-components'
 import Button from '@material-ui/core/Button'
 import { useHistory } from 'react-router'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { pc, sp, tab } from './media'
+import { sp } from './media'
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,6 +96,8 @@ const Test = () => {
   const [valB, setValB] = React.useState<number>(0)
   const [valC, setValC] = React.useState<number>(0)
   const [result, setResult] = React.useState<string>('')
+  const [connect, setConnect] = React.useState<string>('')
+  const [isProp, setIsProp] = React.useState<boolean>(false)
   const [thinking, setThinking] = React.useState<boolean>(true)
   const [currentQuestion, setCurrentQuestion] = React.useState<number>(1)
   const history = useHistory()
@@ -113,6 +115,7 @@ const Test = () => {
         setValC(valC + 1)
       }
       setCurrentQuestion(currentQuestion + 1)
+      setTimeout(propChange, 1000)
     }
 
     if (currentQuestion === 10) {
@@ -121,23 +124,33 @@ const Test = () => {
     }
   }
 
+  const propChange = () => {
+    setIsProp(true)
+  }
+
   console.log('val', valA, valB, valC)
 
   console.log('result', result)
   console.log('thinking', thinking)
+  console.log('isProp', isProp)
+  console.log('connect', connect)
 
   //最終結果の表示
   const showResult = () => {
     !thinking && setThinking(true)
 
     if (valA > valB && valA > valC) {
-      setResult('トレンドからオールドファッションまで幅広く観たいあなた')
+      setResult('トレンドからオールドファッションまで幅広く観たいあなた...')
+      setConnect('valA')
     } else if (valB > valA && valB > valC) {
-      setResult('新しいジャンルにも挑戦してみたいあなた')
+      setResult('新しいジャンルにも挑戦してみたいあなた...')
+      setConnect('valB')
     } else if (valC > valA && valC > valB) {
-      setResult('みたいものが気分によってバラバラなあなた')
+      setResult('みたいものが気分によってバラバラなあなた...')
+      setConnect('valC')
     } else {
-      setResult('王道をしっかり押さえておきたいあなた')
+      setResult('王道をしっかり押さえておきたいあなた...')
+      setConnect('valD')
     }
     setThinking(false)
   }
@@ -150,15 +163,60 @@ const Test = () => {
     setValC(0)
     setResult('')
     setThinking(true)
+    setIsProp(false)
   }
 
   //ホームへ戻る
   const handleHome = (): void => {
     history.push('/')
+    setIsProp(false)
   }
 
   const handleSearch = (): void => {
     history.push('/search')
+  }
+
+  const handlePassResult = (connect: string) => {
+    if (connect === 'valA') {
+      return (
+        <div>
+          <p>{testData.results[0].result[0]}</p>
+          <p>{testData.results[0].result[1]}</p>
+          <p>{testData.results[0].result[2]}</p>
+          <p>{testData.results[0].result[3]}</p>
+        </div>
+      )
+    }
+    if (connect === 'valB') {
+      return (
+        <div>
+          <p>{testData.results[1].result[0]}</p>
+          <p>{testData.results[1].result[1]}</p>
+          <p>{testData.results[1].result[2]}</p>
+          <p>{testData.results[1].result[3]}</p>
+        </div>
+      )
+    }
+    if (connect === 'valC') {
+      return (
+        <div>
+          <p>{testData.results[2].result[0]}</p>
+          <p>{testData.results[2].result[1]}</p>
+          <p>{testData.results[2].result[2]}</p>
+          <p>{testData.results[2].result[3]}</p>
+        </div>
+      )
+    }
+    if (connect === 'valD') {
+      return (
+        <div>
+          <p>{testData.results[3].result[0]}</p>
+          <p>{testData.results[3].result[1]}</p>
+          <p>{testData.results[3].result[2]}</p>
+          <p>{testData.results[3].result[3]}</p>
+        </div>
+      )
+    }
   }
 
   return (
@@ -184,6 +242,7 @@ const Test = () => {
             ) : (
               <div>
                 <p>{result}</p>
+                <p>{handlePassResult(connect)}</p>
                 <button onClick={reset}>Test again</button>
                 <button onClick={handleSearch}>go to search</button>
               </div>
@@ -199,3 +258,36 @@ const Test = () => {
 }
 
 export default Test
+
+// {connect === 'valA' && (
+//   <div>
+//     <p>{testData.results[0].result[0]}</p>
+//     <p>{testData.results[0].result[1]}</p>
+//     <p>{testData.results[0].result[2]}</p>
+//     <p>{testData.results[0].result[3]}</p>
+//   </div>
+// )}
+// {connect === 'valB' && (
+//   <div>
+//     <p>{testData.results[1].result[0]}</p>
+//     <p>{testData.results[1].result[1]}</p>
+//     <p>{testData.results[1].result[2]}</p>
+//     <p>{testData.results[1].result[3]}</p>
+//   </div>
+// )}
+// {connect === 'valC' && (
+//   <div>
+//     <p>{testData.results[0].result[0]}</p>
+//     <p>{testData.results[0].result[1]}</p>
+//     <p>{testData.results[0].result[2]}</p>
+//     <p>{testData.results[0].result[3]}</p>
+//   </div>
+// )}
+// {connect === 'valD' && (
+//   <div>
+//     <p>{testData.results[0].result[0]}</p>
+//     <p>{testData.results[0].result[1]}</p>
+//     <p>{testData.results[0].result[2]}</p>
+//     <p>{testData.results[0].result[3]}</p>
+//   </div>
+// )}

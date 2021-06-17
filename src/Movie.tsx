@@ -7,7 +7,7 @@ import { db } from './firebase'
 import LinearProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize'
-import { pc, sp, tab } from './media'
+import { sp } from './media'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import './App.css'
 
@@ -140,7 +140,7 @@ const Movie = () => {
     setError('')
 
     if (title === '') {
-      setError('Please leave the comments before you post')
+      setError('この作品はどうでしたか...？')
       return
     }
 

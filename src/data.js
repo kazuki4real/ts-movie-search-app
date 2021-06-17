@@ -40,5 +40,23 @@ export const testData = {
       id: 10,
       question: '今まさに人生が楽しい'
     }
+  ],
+  results: [
+    {
+      name: 'valA',
+      result: ['valA_commect', 'sss', 'ddd', 'fff', 'ccc']
+    },
+    {
+      name: 'valB',
+      result: ['valB_commect', 'valB_commect', 'valB_commect', 'valB_commect', 'valB_commect']
+    },
+    {
+      name: 'valC',
+      result: ['valC_commect', 'sasasasas', 'sasasasasa', 'dsdsdsdsdsd', 'rtrtrtrtrtrt']
+    },
+    {
+      name: 'valD',
+      result: ['valD_commect', 'sasasasas', 'sasasasasa', 'dsdsdsdsdsd', 'rtrtrtrtrtrt']
+    }
   ]
 }

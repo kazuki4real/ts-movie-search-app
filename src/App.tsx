@@ -5,7 +5,6 @@ import Home from './Home'
 import Search from './Search'
 import Movie from './Movie'
 import Test from './Test'
-import styled from 'styled-components'
 
 const App: React.FC = () => {
   return (
